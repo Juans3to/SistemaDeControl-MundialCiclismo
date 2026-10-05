@@ -14,14 +14,15 @@ import javax.swing.SwingUtilities;
 import vista.VistaMundial;
 
 /**
- * Clase principal: inicializa el MVC y lanza la ventana.
+ * Clase principal: inicializamos el MVC y lanza la ventana.
  */
+
 public class Main {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             VistaMundial vista = new VistaMundial();
-            ControladorMundial controlador = new ControladorMundial();
+            ControladorMundial controlador = new ControladorMundial(vista);
             vista.setVisible(true);
         });
     }

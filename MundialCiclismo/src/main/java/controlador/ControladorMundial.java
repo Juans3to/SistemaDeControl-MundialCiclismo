@@ -11,6 +11,7 @@ package controlador;
 
 import java.util.ArrayList;
 import modelo.Competidor;
+import vista.VistaMundial;
 
 /**
  * Gestiona la lista de competidores y conecta el modelo con la vista.
@@ -18,9 +19,12 @@ import modelo.Competidor;
 public class ControladorMundial {
 
     private final ArrayList<Competidor> competidores;
+    private final VistaMundial vista;
 
-    public ControladorMundial() {
+    public ControladorMundial(VistaMundial vista) {
         this.competidores = new ArrayList<>();
+        this.vista = vista;
+        this.vista.addRegistrarListener(e -> registrarCompetidor());
     }
 
     public void agregarCompetidor(Competidor competidor) {
@@ -29,5 +33,33 @@ public class ControladorMundial {
 
     public ArrayList<Competidor> getCompetidores() {
         return competidores;
+    }
+
+    private void registrarCompetidor() {
+        try {
+            String nombre = vista.getNombre().trim();
+            String pais = vista.getPais().trim();
+
+            if (nombre.isEmpty() || pais.isEmpty()) {
+                vista.mostrarMensaje("El nombre y el pais son obligatorios.");
+                return;
+            }
+
+            int edad = Integer.parseInt(vista.getEdad().trim());
+            int ranking = Integer.parseInt(vista.getRanking().trim());
+            double estatura = Double.parseDouble(vista.getEstatura().trim().replace(',', '.'));
+            double peso = Double.parseDouble(vista.getPeso().trim().replace(',', '.'));
+
+            if (edad <= 0 || ranking < 0 || estatura <= 0 || peso <= 0) {
+                vista.mostrarMensaje("Edad, estatura y peso deben ser mayores a 0 y el ranking no puede ser negativo.");
+                return;
+            }
+
+            agregarCompetidor(new Competidor(nombre, edad, pais, ranking, estatura, peso));
+            vista.actualizarTabla(competidores);
+            vista.limpiarCampos();
+        } catch (NumberFormatException ex) {
+            vista.mostrarMensaje("Edad, ranking, estatura y peso deben ser numeros validos.");
+        }
     }
 }
