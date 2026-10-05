@@ -9,11 +9,11 @@ package modelo;
  * @author juans
  */
 
-
 /**
  * Ciclista que participa en el Mundial de Ciclismo de Pista.
  * Hereda los datos basicos de Atleta y agrega ranking, estatura y peso.
  */
+
 public class Competidor extends Atleta {
 
     private int ranking;      // puntaje acumulado en el ranking mundial
@@ -50,6 +50,29 @@ public class Competidor extends Atleta {
 
     public void setPeso(double peso) {
         this.peso = peso;
+    }
+
+    // Sobrecarga 1: suma solo los puntos obtenidos
+    public void actualizarRanking(int puntosObtenidos) {
+        ranking = ranking + puntosObtenidos;
+    }
+
+    // Sobrecarga 2: suma los puntos y una bonificacion si gano medalla
+    public void actualizarRanking(int puntosObtenidos, boolean ganoMedalla) {
+        int bonus;
+
+        if (ganoMedalla) {
+            // Estructura anidada: la bonificacion depende de los puntos
+            if (puntosObtenidos > 50) {
+                bonus = 20;
+            } else {
+                bonus = 10;
+            }
+        } else {
+            bonus = 0;
+        }
+
+        ranking = ranking + puntosObtenidos + bonus;
     }
 
     // Sobreescritura: reutiliza el toString de la superclase con super
