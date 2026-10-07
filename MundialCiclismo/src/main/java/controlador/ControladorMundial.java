@@ -25,6 +25,7 @@ public class ControladorMundial {
         this.competidores = new ArrayList<>();
         this.vista = vista;
         this.vista.addRegistrarListener(e -> registrarCompetidor());
+        this.vista.addActualizarListener(e -> actualizarRankingCompetidor());
     }
 
     public void agregarCompetidor(Competidor competidor) {
@@ -33,6 +34,40 @@ public class ControladorMundial {
 
     public ArrayList<Competidor> getCompetidores() {
         return competidores;
+    }
+
+    private void actualizarRankingCompetidor() {
+        int fila = vista.getFilaSeleccionada();
+
+        if (fila < 0) {
+            vista.mostrarMensaje("Selecciona un competidor de la tabla.");
+            return;
+        }
+
+        try {
+            int puntos = Integer.parseInt(vista.getPuntos().trim());
+
+            if (puntos < 0) {
+                vista.mostrarMensaje("Los puntos no pueden ser negativos.");
+                return;
+            }
+
+            Competidor competidor = competidores.get(fila);
+
+            // Se elige la sobrecarga segun si gano medalla o no
+            if (vista.isGanoMedalla()) {
+                competidor.actualizarRanking(puntos, true);
+            } else {
+                competidor.actualizarRanking(puntos);
+            }
+
+            vista.actualizarTabla(competidores);
+            vista.limpiarPuntos();
+            vista.mostrarMensaje("Ranking de " + competidor.getNombre()
+                    + " actualizado a " + competidor.getRanking() + " puntos.");
+        } catch (NumberFormatException ex) {
+            vista.mostrarMensaje("Los puntos deben ser un numero entero valido.");
+        }
     }
 
     private void registrarCompetidor() {

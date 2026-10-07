@@ -10,11 +10,13 @@ package vista;
  */
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,6 +27,10 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import modelo.Competidor;
 
+/**
+ * Vista del Mundial: ventana Swing (JFrame) con formulario de registro
+ * y tabla con los competidores registrados.
+ */
 public class VistaMundial extends JFrame {
 
     private JTextField txtNombre;
@@ -34,18 +40,22 @@ public class VistaMundial extends JFrame {
     private JTextField txtEstatura;
     private JTextField txtPeso;
     private JButton btnRegistrar;
+    private JTextField txtPuntos;
+    private JCheckBox chkMedalla;
+    private JButton btnActualizar;
     private JTable tablaCompetidores;
     private DefaultTableModel modeloTabla;
 
     public VistaMundial() {
         setTitle("Mundial de Ciclismo de Pista - Cali");
-        setSize(750, 500);
+        setSize(750, 560);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
         add(crearPanelFormulario(), BorderLayout.NORTH);
         add(crearPanelTabla(), BorderLayout.CENTER);
+        add(crearPanelActualizar(), BorderLayout.SOUTH);
     }
 
     private JPanel crearPanelFormulario() {
@@ -78,6 +88,22 @@ public class VistaMundial extends JFrame {
         return panel;
     }
 
+    private JPanel crearPanelActualizar() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        panel.setBorder(BorderFactory.createTitledBorder("Actualizar ranking del competidor seleccionado"));
+
+        txtPuntos = new JTextField(8);
+        chkMedalla = new JCheckBox("Gano medalla");
+        btnActualizar = new JButton("Actualizar ranking");
+
+        panel.add(new JLabel("Puntos obtenidos:"));
+        panel.add(txtPuntos);
+        panel.add(chkMedalla);
+        panel.add(btnActualizar);
+
+        return panel;
+    }
+
     private JScrollPane crearPanelTabla() {
         String[] columnas = {"Nombre", "Edad", "Pais", "Ranking", "Estatura (m)", "Peso (kg)"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
@@ -92,9 +118,13 @@ public class VistaMundial extends JFrame {
         return scroll;
     }
 
-    // ---- Listeners ----
+    // ---- Listeners (los asigna el controlador) ----
     public void addRegistrarListener(ActionListener listener) {
         btnRegistrar.addActionListener(listener);
+    }
+
+    public void addActualizarListener(ActionListener listener) {
+        btnActualizar.addActionListener(listener);
     }
 
     // ---- Lectura de los campos ----
@@ -122,7 +152,25 @@ public class VistaMundial extends JFrame {
         return txtPeso.getText();
     }
 
+    public String getPuntos() {
+        return txtPuntos.getText();
+    }
+
+    public boolean isGanoMedalla() {
+        return chkMedalla.isSelected();
+    }
+
+    // Devuelve el indice de la fila seleccionada, o -1 si no hay ninguna
+    public int getFilaSeleccionada() {
+        return tablaCompetidores.getSelectedRow();
+    }
+
     // ---- Acciones sobre la vista ----
+    public void limpiarPuntos() {
+        txtPuntos.setText("");
+        chkMedalla.setSelected(false);
+    }
+
     public void limpiarCampos() {
         txtNombre.setText("");
         txtEdad.setText("");
