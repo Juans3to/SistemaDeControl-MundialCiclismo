@@ -63,8 +63,7 @@ public class ControladorMundial {
 
             vista.actualizarTabla(competidores);
             vista.limpiarPuntos();
-            vista.mostrarMensaje("Ranking de " + competidor.getNombre()
-                    + " actualizado a " + competidor.getRanking() + " puntos.");
+            vista.mostrarMensaje("Ranking actualizado:\n" + competidor.toString());
         } catch (NumberFormatException ex) {
             vista.mostrarMensaje("Los puntos deben ser un numero entero valido.");
         }
@@ -90,9 +89,11 @@ public class ControladorMundial {
                 return;
             }
 
-            agregarCompetidor(new Competidor(nombre, edad, pais, ranking, estatura, peso));
+            Competidor nuevo = new Competidor(nombre, edad, pais, ranking, estatura, peso);
+            agregarCompetidor(nuevo);
             vista.actualizarTabla(competidores);
             vista.limpiarCampos();
+            vista.mostrarMensaje("Competidor registrado:\n" + nuevo.toString());
         } catch (NumberFormatException ex) {
             vista.mostrarMensaje("Edad, ranking, estatura y peso deben ser numeros validos.");
         }
